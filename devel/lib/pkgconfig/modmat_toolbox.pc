@@ -1,0 +1,8 @@
+prefix=/home/vscode/ModMath2324/devel
+
+Name: modmat_toolbox
+Description: Description of modmat_toolbox
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

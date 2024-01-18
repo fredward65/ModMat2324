@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="basic_setup">
+    <!-- A global light source -->
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>0.0 1.0 -1.0</direction>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+    <!-- A ground plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <!-- Camera angle -->
+    <gui>
+      <camera name="user_camera">
+        <projection_type>orthographic</projection_type>
+        <pose>0 -1 0.5 0 0 1.57</pose>
+      </camera>
+    </gui>
+  </world>
+</sdf>
