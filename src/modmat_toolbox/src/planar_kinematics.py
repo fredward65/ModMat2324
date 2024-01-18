@@ -4,15 +4,23 @@ import numpy as np
 import rospy
 from tools.command import PlanarArmCommander
 
+# numpy pretty-print 
+np.set_printoptions(precision=3, suppress=True)
+# Arm dimensions
+link_lenghts:dict = {'l1': 0.1519, 'l2': 0.24365, 'l3': -0.21325, 'l4':  0.11235}
+
 
 def forward_kinematics(joint_angles:np.ndarray) -> np.ndarray:
     """
     Forward Kinematics for a UR3 Arm
     """
-    pose_x = 0.0
-    pose_z = 0.0
-    angle  = 0.0
-    arm_pose = np.array([pose_x, pose_z, angle])
+    theta_1 = joint_angles[0]
+    theta_2 = joint_angles[1]
+    theta_3 = joint_angles[2]
+    pos_x = 0.0
+    pos_z = 0.0
+    angle = 0.0
+    arm_pose = np.array([pos_x, pos_z, angle])
     return arm_pose
 
 
@@ -20,10 +28,13 @@ def inverse_kinematics(arm_pose:np.ndarray) -> np.ndarray:
     """
     Inverse Kinematics for a UR3 Arm
     """
-    shoulder_joint = 0.0
-    elbow_joint = 0.0
-    wrist_joint = 0.0
-    joint_angles = np.array([shoulder_joint, elbow_joint, wrist_joint])
+    pos_x = arm_pose[0]
+    pos_z = arm_pose[1]
+    angle = arm_pose[2]
+    theta_1 = 0.0
+    theta_2 = 0.0
+    theta_3 = 0.0
+    joint_angles = np.array([theta_1, theta_2, theta_3])
     return joint_angles
 
 
@@ -32,16 +43,13 @@ def main():
     planar_arm_commander = PlanarArmCommander()
     print("Kinematics demo for a UR3 Arm in XZ planar mode")
     rospy.sleep(1)
-    
-    # Arm dimensions
-    # d1:  0.1519
-    # a2: -0.24365 
-    # a3: -0.21325
-    # d4:  0.11235
 
     """ Forward Kinematics """
+    theta_1 =  0.5 * np.pi
+    theta_2 = -0.5 * np.pi
+    theta_3 =  0.0
+    angles = np.array([theta_1, theta_2, theta_3])
     print("Moving to joint angles...")
-    angles = np.array([-0.25 * np.pi, 0.5 * np.pi, 0.0])
     planar_arm_commander.move_joints(angles)
     print("Calculating cartesian pose...")
     current_angles = planar_arm_commander.get_current_joint_angles()

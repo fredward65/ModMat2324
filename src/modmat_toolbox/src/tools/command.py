@@ -13,12 +13,13 @@ class BasicArmCommander(object):
                         "wrist_1_joint",
                         "wrist_2_joint",
                         "wrist_3_joint"]
-    home_angles:np.ndarray = np.zeros((6, 1))
+    home_angles:np.ndarray = np.zeros(6)
     
-    def __init__(self, verbose:bool=False) -> None:
+    def __init__(self, sense:np.ndarray=np.ones(6), verbose:bool=False) -> None:
         """
         Basic Commander for an UR Arm
         """
+        self.sense = sense
         print("Initializing ROS Node...")
         log_level = rospy.DEBUG if verbose else rospy.INFO
         rospy.init_node("basic_arm_command_node", anonymous=False, log_level=log_level)
@@ -28,13 +29,12 @@ class BasicArmCommander(object):
         self.move_to_home_position()
         rospy.loginfo("Ready to command the joints")
 
-    @staticmethod
-    def joint_trajectory_point(angles:np.ndarray, tsecs:float=1) -> JointTrajectoryPoint:
+    def joint_trajectory_point(self, angles:np.ndarray, tsecs:float=1) -> JointTrajectoryPoint:
         """
         Create a Joint Trajectory Point 
         """
         point = JointTrajectoryPoint()
-        point.positions = angles
+        point.positions = np.multiply(angles, self.sense)
         point.velocities = [0,0,0,0,0,0]
         point.accelerations = [0,0,0,0,0,0]
         point.time_from_start = rospy.Duration.from_sec(tsecs)
@@ -47,6 +47,7 @@ class BasicArmCommander(object):
         joint_state:JointState = rospy.wait_for_message("/joint_states", JointState, 1)
         joint_state_dict = {j_i: p_i for j_i, p_i in zip(joint_state.name, joint_state.position)}
         joint_state = np.array([joint_state_dict[j_i] for j_i in self.joint_names])
+        joint_state = np.multiply(joint_state, self.sense)
         return joint_state
 
     def move_to_home_position(self) -> None:
@@ -99,7 +100,8 @@ class PlanarArmCommander(object):
             "wrist_1_joint",
         The arm will move on the XZ plane.
         """
-        self.__basic_arm_commander = BasicArmCommander(verbose=verbose)
+        sense = -1 * np.ones(6)
+        self.__basic_arm_commander = BasicArmCommander(sense=sense, verbose=verbose)
         
     def go_home(self) -> None:
         """
