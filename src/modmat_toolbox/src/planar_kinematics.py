@@ -7,7 +7,7 @@ from tools.command import PlanarArmCommander
 # numpy pretty-print 
 np.set_printoptions(precision=3, suppress=True)
 # Arm dimensions
-link_lenghts:dict = {'l1': 0.1519, 'l2': 0.24365, 'l3': -0.21325, 'l4':  0.11235}
+link_lenghts:dict = {'l1': 0.1519, 'l2': 0.24365, 'l3': 0.21325, 'l4':  0.11235}
 
 
 def forward_kinematics(joint_angles:np.ndarray) -> np.ndarray:
