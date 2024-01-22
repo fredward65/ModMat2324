@@ -33,5 +33,15 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 RUN sudo apt update && sudo apt upgrade -y \
     && sudo apt-get install -y ros-$ROS_DISTRO-universal-robots
 
+# Create ROS workspace
+ARG ROS_WS=ModMath2324
+SHELL ["/bin/bash", "-c"]
+RUN mkdir -p /home/${USERNAME}/${ROS_WS}/src \
+    && cd /home/${USERNAME}/${ROS_WS} \
+    && source /opt/ros/$ROS_DISTRO/setup.bash \
+    && catkin_make\
+    && . devel/setup.bash \
+    && echo "source ~/${ROS_WS}/devel/setup.bash" >> ~/.bashrc
+
 # Smaller VNC resolution
 ENV VNC_RESOLUTION="800x600x16"

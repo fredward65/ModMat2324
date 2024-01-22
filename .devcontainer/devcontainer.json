@@ -4,7 +4,7 @@
   "runArgs": [
     "--privileged"//,"--network=host"
   ],
-  "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/${localWorkspaceFolderBasename},type=bind",
+  "workspaceMount": "source=${localWorkspaceFolder}/src,target=/home/vscode/${localWorkspaceFolderBasename}/src,type=bind",
   "workspaceFolder": "/home/vscode/${localWorkspaceFolderBasename}",
   "mounts": [
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.bash_history,target=/home/vscode/.bash_history,type=bind"
@@ -21,5 +21,5 @@
       "label": "Desktop (VNC)"
     }
   },
-  "postCreateCommand": "bash ~/ModMath2324/ws-setup.sh"
+  "postCreateCommand": "bash -c \"catkin_make && . $PWD/devel/setup.bash\""
 }
