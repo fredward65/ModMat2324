@@ -1,5 +1,5 @@
 /Support
-./build
-./devel
-./src/CMakeList.txt
+/build
+/devel
+/src/CMakeLists.txt
 **/__pycache__/
