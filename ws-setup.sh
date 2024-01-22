@@ -10,4 +10,5 @@ rm -rf -v ./build ./devel ./src/CMakeLists.txt
 catkin_make
 
 # Source the package setup file
+source ~/ModMath2324/devel/setup.bash
 echo "source ~/ModMath2324/devel/setup.bash" >> ~/.bashrc
