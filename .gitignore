@@ -1,2 +1,5 @@
-./.gitignore
 /Support
+./build
+./devel
+./src/CMakeList.txt
+**/__pycache__/

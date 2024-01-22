@@ -1,5 +1,5 @@
 {
-  "name": "ModMath2023",
+  "name": "ModMath2324",
   "dockerFile": "Dockerfile",
   "runArgs": [
     "--privileged"//,"--network=host"
@@ -20,5 +20,6 @@
     "5901": {
       "label": "Desktop (VNC)"
     }
-  }
+  },
+  "postCreateCommand": "bash ~/ModMath2324/ws-setup.sh"
 }

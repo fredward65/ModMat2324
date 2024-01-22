@@ -33,8 +33,5 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 RUN sudo apt update && sudo apt upgrade -y \
     && sudo apt-get install -y ros-$ROS_DISTRO-universal-robots
 
-# Source the package setup file
-RUN echo "source ~/ModMath2324/devel/setup.bash" >> ~/.bashrc
-
 # Smaller VNC resolution
 ENV VNC_RESOLUTION="800x600x16"

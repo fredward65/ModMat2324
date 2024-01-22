@@ -374,7 +374,7 @@ RT_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/librt.so
 SETUPTOOLS_DEB_LAYOUT:BOOL=ON
 
 //Name of the computer/site where compile is being run
-SITE:STRING=docker-desktop
+SITE:STRING=23ace90e4907
 
 //LSB Distrib tag
 UBUNTU:BOOL=TRUE
