@@ -1,3 +1,4 @@
+.gitignore
 /Support
 /src/CMakeLists.txt
 **/__pycache__/
