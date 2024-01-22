@@ -8,7 +8,6 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/vscode/ModMath2324/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/vscode/ModMath2324/devel/lib:$LD_LIBRARY_PATH"
 export PWD='/home/vscode/ModMath2324/build'
 export ROSLISP_PACKAGE_DIRECTORIES='/home/vscode/ModMath2324/devel/share/common-lisp'
 export ROS_PACKAGE_PATH="/home/vscode/ModMath2324/src:$ROS_PACKAGE_PATH"
