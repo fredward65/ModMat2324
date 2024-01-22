@@ -15,10 +15,11 @@ def create_tf_matrix(theta:float, dx:float, dz:float) -> np.ndarray:
     Create a Transformation Matrix for the plane XZ
     """
     R = np.array([[np.cos(theta),-np.sin(theta)],\
-                    [np.sin(theta), np.cos(theta)]])
+                  [np.sin(theta), np.cos(theta)]])
     p = np.array([[dx],\
-                    [dz]])
-    A = np.r_[np.c_[R, R @ p], [[0, 0, 1]]]
+                  [dz]])
+    A = np.r_[np.c_[R    , R @ p],
+                   [[0, 0,    1]]]
     return A
 
 def forward_kinematics(point_angles:np.ndarray) -> np.ndarray:
@@ -29,12 +30,13 @@ def forward_kinematics(point_angles:np.ndarray) -> np.ndarray:
     theta_2 = point_angles[1]
     theta_3 = point_angles[2] - 0.5 * np.pi
     
-    A_1 = create_tf_matrix(0, 0, link_lenghts["l1"])
-    A_2 = create_tf_matrix(theta_1, link_lenghts["l2"], 0)
-    A_3 = create_tf_matrix(theta_2, link_lenghts["l3"], 0)
-    A_4 = create_tf_matrix(theta_3, link_lenghts["l4"], 0)
+    A_1 = create_tf_matrix(0      , 0                 , link_lenghts["l1"])
+    A_2 = create_tf_matrix(theta_1, link_lenghts["l2"], 0                 )
+    A_3 = create_tf_matrix(theta_2, link_lenghts["l3"], 0                 )
+    A_4 = create_tf_matrix(theta_3, link_lenghts["l4"], 0                 )
     A = A_1 @ A_2 @ A_3 @ A_4
     print("A : \n", A)
+    
     pos_x = A[0, -1]
     pos_z = A[1, -1]
     theta = np.arctan2(A[1, 0], A[0, 0])
