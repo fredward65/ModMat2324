@@ -33,6 +33,11 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 RUN sudo apt update && sudo apt upgrade -y \
     && sudo apt-get install -y ros-$ROS_DISTRO-universal-robots
 
+# Install Python dependencies
+RUN sudo apt update \
+    && sudo apt install pip -y \
+    && pip install sympy
+
 # Create ROS workspace
 ARG ROS_WS=ModMath2324
 SHELL ["/bin/bash", "-c"]

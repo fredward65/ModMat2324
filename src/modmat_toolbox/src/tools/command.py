@@ -91,6 +91,9 @@ class BasicArmCommander(object):
 
 
 class PlanarArmCommander(object):
+    home_angles:np.ndarray = np.zeros(3)
+    offset_angles:np.ndarray = 0.5 * np.pi * np.array([0,0,1])
+    
     def __init__(self, verbose:bool=False) -> None:
         """
         Planar Arm Commander for UR Arm
@@ -102,19 +105,20 @@ class PlanarArmCommander(object):
         """
         sense = -1 * np.ones(6)
         self.__basic_arm_commander = BasicArmCommander(sense=sense, verbose=verbose)
+        self.go_home()
         
     def go_home(self) -> None:
         """
         Move arm to home pose
         """
-        self.__basic_arm_commander.move_to_home_position()
+        self.move_joints(self.home_angles, t_sec=2)
 
     def move_joints(self, joint_angles:np.ndarray, t_sec:float=1) -> None:
         """
         Move joints to angles
         """
         full_joint_angles = np.zeros(6)
-        full_joint_angles[1:4] = joint_angles
+        full_joint_angles[1:4] = joint_angles + self.offset_angles
         self.__basic_arm_commander.move_to_joint_positions(full_joint_angles, t_sec=t_sec)
 
     def follow_joint_trajectory(self, joint_trajectory:np.ndarray, t_vec:np.ndarray) -> None:
@@ -131,7 +135,7 @@ class PlanarArmCommander(object):
         Get current joint angles
         """
         full_current_joint_angles = self.__basic_arm_commander.get_current_joint_states()
-        current_joint_angles = full_current_joint_angles[1:4]
+        current_joint_angles = full_current_joint_angles[1:4] - self.offset_angles
         return current_joint_angles
 
 
