@@ -2,7 +2,7 @@
 
 import numpy as np
 import rospy
-from tools.command import PlanarArmCommander
+from tools.ur_command import PlanarArmCommander
 
 
 def main():
@@ -12,7 +12,7 @@ def main():
     rospy.sleep(1)
     
     print("Moving to a joint angle pose...")
-    angles = 0.5 * np.pi * np.array([1, -1, 1])
+    angles = 0.5 * np.pi * np.array([1, -1, -1])
     planar_arm_commander.move_joints(angles)
     rospy.sleep(1)
     planar_arm_commander.go_home()

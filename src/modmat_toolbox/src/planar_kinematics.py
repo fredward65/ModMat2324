@@ -2,8 +2,7 @@
 
 import numpy as np
 import rospy
-from tools.command import PlanarArmCommander
-from tools.ur_planar_kinematics import PlanarKinematicsCommander
+from tools.ur_command import PlanarKinematicsCommander
 
 # numpy pretty-print 
 np.set_printoptions(precision=3, suppress=True)
@@ -30,12 +29,15 @@ def main():
     rospy.sleep(1)
 
     """ Inverse Kinematics """
-    new_pose = np.array([0.0, 0.4, 1.57])
+    x = 0.00
+    z = 0.40
+    theta = -0.5 * np.pi
+    new_pose = np.array([x, z, theta])
     print("Calculating joint angles from pose ", new_pose) 
     new_angles = planar_arm_commander.inverse_kinematics(new_pose)
     print("New angles: ", new_angles)
     print("Moving to a Cartesian pose...")
-    planar_arm_commander.move_joints(new_angles, t_sec=2)
+    planar_arm_commander.move_joints(new_angles, t_sec=1)
     rospy.sleep(1)
 
     planar_arm_commander.go_home()

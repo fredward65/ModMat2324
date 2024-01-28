@@ -1,39 +1,11 @@
 #!/usr/bin/env python3
 
+import dill
 import numpy as np
+import os
 import sympy as sym
-from .command import PlanarArmCommander
 
-class PlanarKinematicsCommander(PlanarArmCommander):
-    def __init__(self) -> None:
-        """
-        Planar Kinematics Commander for a UR3 Arm
-        """
-        # Arm links dimensions
-        super().__init__()
-        self.link_lenghts:dict = {'l1': 0.1519, 'l2': 0.24365, 'l3': 0.21325, 'l4':  0.11235}
-        l1 = self.link_lenghts["l1"]
-        l2 = self.link_lenghts["l2"]
-        l3 = self.link_lenghts["l3"]
-        l4 = self.link_lenghts["l4"]
-        self.links = [l1, l2, l3, l4]
-        self.kin_solver = SimpleKinematicSolver()
-        self.fk_solver = self.kin_solver.lambda_fk()
-        self.ik_solver = self.kin_solver.lambda_ik()
-
-    def forward_kinematics(self, joint_angles:np.ndarray) -> np.ndarray:
-        """
-        Forward Kinematics for a UR3 Arm
-        """
-        arm_pose = np.array(self.fk_solver(joint_angles, self.links))
-        return arm_pose
-
-    def inverse_kinematics(self, arm_pose:np.ndarray) -> np.ndarray:
-        """
-        Inverse Kinematics for a UR3 Arm
-        """
-        joint_angles = np.array(self.ik_solver(arm_pose, self.links))
-        return joint_angles
+dill.settings["recurse"] = True
 
 
 def create_tf_matrix(theta:float, dx:float, dz:float) -> sym.Matrix:
@@ -129,8 +101,8 @@ class SimpleKinematicSolver(object):
         
         sol = sym.solve([eq_1, eq_2, eq_3, eq_4],
                         [s1, c1, s12, c12], dict=True)
-        th_1 = sym.atan2(sol[0][s1], sol[0][c1])
-        th_2 = sym.atan2(sol[0][s12], sol[0][c12]) - th_1
+        th_1 = sym.atan2(sol[1][s1], sol[1][c1])
+        th_2 = sym.atan2(sol[1][s12], sol[1][c12]) - th_1
 
         sub_vars = {self.z: self.z - self.L1,
                     sth: sym.sin(self.th),
@@ -158,11 +130,19 @@ class SimpleKinematicSolver(object):
                              [self.L1, self.L2, self.L3, self.L4]),
                             self.inverse_kinematics, modules="numpy")
 
+    def gen_kin_files(self):
+        """
+        Generate files from serialized lambda expressions for FK and IK
+        """
+        dir_name = os.path.dirname(__file__)
+        print("Serializing lambda expressions in ", dir_name)
+        dill.dump(self.lambda_fk(), open(dir_name + "/lambda_fk", "wb"))
+        dill.dump(self.lambda_ik(), open(dir_name + "/lambda_ik", "wb"))
+
 
 def main():
     kin_solver = SimpleKinematicSolver()
-    print(kin_solver.forward_kinematics)
-    print(kin_solver.inverse_kinematics)
+    kin_solver.gen_kin_files()
 
 
 if __name__ == '__main__':

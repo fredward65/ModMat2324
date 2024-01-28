@@ -36,7 +36,7 @@ RUN sudo apt update && sudo apt upgrade -y \
 # Install Python dependencies
 RUN sudo apt update \
     && sudo apt install pip -y \
-    && pip install sympy
+    && pip install sympy dill
 
 # Create ROS workspace
 ARG ROS_WS=ModMath2324

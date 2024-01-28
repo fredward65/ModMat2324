@@ -2,6 +2,8 @@
 
 import numpy as np
 import rospy
+from dill import load
+from os.path import dirname
 from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
@@ -127,7 +129,7 @@ class PlanarArmCommander(object):
         """
         length = joint_trajectory.shape[0]
         full_joint_trajectory = np.zeros((length, 6))
-        full_joint_trajectory[:, 1:4] = joint_trajectory
+        full_joint_trajectory[:, 1:4] = joint_trajectory + self.offset_angles
         self.__basic_arm_commander.follow_joint_trajectory(full_joint_trajectory, t_vec)
 
     def get_current_joint_angles(self) -> None:
@@ -137,6 +139,37 @@ class PlanarArmCommander(object):
         full_current_joint_angles = self.__basic_arm_commander.get_current_joint_states()
         current_joint_angles = full_current_joint_angles[1:4] - self.offset_angles
         return current_joint_angles
+
+
+class PlanarKinematicsCommander(PlanarArmCommander):
+    def __init__(self, link_lenghts:dict={'l1': 0.1519, 'l2': 0.24365, 'l3': 0.21325, 'l4':  0.11235}) -> None:
+        """
+        Planar Kinematics Commander for a UR3 Arm
+        """
+        # Arm links dimensions
+        super().__init__()
+        l1 = link_lenghts["l1"]
+        l2 = link_lenghts["l2"]
+        l3 = link_lenghts["l3"]
+        l4 = link_lenghts["l4"]
+        self.links = [l1, l2, l3, l4]
+        dir_name = dirname(__file__)
+        self.fk_solver = load(open(dir_name + "/lambda_fk", "rb"))
+        self.ik_solver = load(open(dir_name + "/lambda_ik", "rb"))
+
+    def forward_kinematics(self, joint_angles:np.ndarray) -> np.ndarray:
+        """
+        Forward Kinematics for a UR3 Arm
+        """
+        arm_pose = np.array(self.fk_solver(joint_angles, self.links))
+        return arm_pose
+
+    def inverse_kinematics(self, arm_pose:np.ndarray) -> np.ndarray:
+        """
+        Inverse Kinematics for a UR3 Arm
+        """
+        joint_angles = np.array(self.ik_solver(arm_pose, self.links))
+        return joint_angles
 
 
 def main():
