@@ -21,5 +21,10 @@
       "label": "Desktop (VNC)"
     }
   },
-  "postCreateCommand": "bash -c \"catkin_make && . $PWD/devel/setup.bash\""
+  "postCreateCommand": "bash -c \"catkin_make && . $PWD/devel/setup.bash\"",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ritwickdey.liveserver"]
+    }
+  }
 }

@@ -84,6 +84,7 @@ class BasicArmCommander(object):
         for j_i, t_i in zip(joint_trajectory, t_vec):
             point = self.joint_trajectory_point(j_i, t_i)
             msg.points.append(point)
+        self.move_to_joint_positions(joint_trajectory[0])
         msg.header.stamp = rospy.Time.now()
         rospy.logdebug("Sending joint states...")
         self.pub.publish(msg)
@@ -170,6 +171,20 @@ class PlanarKinematicsCommander(PlanarArmCommander):
         """
         joint_angles = np.array(self.ik_solver(arm_pose, self.links))
         return joint_angles
+
+    def move_to_point(self, arm_pose:np.ndarray, t_sec:float=1) -> None:
+        """
+        Move arm to Cartesian pose
+        """
+        joint_angles = self.inverse_kinematics(arm_pose)
+        self.move_joints(joint_angles, t_sec=t_sec)
+
+    def follow_trajectory(self, trajectory:np.ndarray, t_vec:np.ndarray) -> None:
+        """
+        Follow Cartesian pose
+        """
+        joint_trajectory = np.array([self.inverse_kinematics(p_i) for p_i in trajectory]).reshape((-1, 3))
+        self.follow_joint_trajectory(joint_trajectory, t_vec)
 
 
 def main():
