@@ -2,7 +2,7 @@
 
 import numpy as np
 import rospy
-from tools.trajectory_generators import linear_trajectory, circular_trajectory, square_trajectory
+from tools.trajectory_generators import linear_trajectory, circular_trajectory, square_trajectory, polygon_trajectory
 from tools.ur_command import PlanarKinematicsCommander
 
 # numpy pretty-print 
@@ -28,9 +28,9 @@ def main():
     rospy.sleep(0.5)
 
     """ Circular trajectory generation """
-    p_0 = [0.00, 0.40]   # Initial Cartesinan point
-    radius = 0.30        # Circle radius
-    angle = 0.5 * np.pi  # Fixed end-effector angle
+    p_0 = [0.25, 0.25]   # Initial Cartesinan point
+    radius = 0.15        # Circle radius
+    angle = 0.30 * np.pi  # Fixed end-effector angle
     t_vec, trajectory = circular_trajectory(p_0, radius, angle, t_f=2)
     print("Following a circular Cartesian trajectory...")
     planar_arm_commander.follow_trajectory(trajectory, t_vec)
@@ -39,11 +39,23 @@ def main():
     rospy.sleep(0.5)
 
     """ Square trajectory generation """
-    p_0 = [0.30, 0.30]    # Initial Cartesinan point
-    side = 0.30           # Square side length
+    p_0 = [0.25, 0.25]    # Initial Cartesinan point
+    side = 0.15           # Square side length
     angle = 0.25 * np.pi  # Fixed end-effector angle
     t_vec, trajectory = square_trajectory(p_0, side, angle, t_f=2)
     print("Following a square Cartesian trajectory...")
+    planar_arm_commander.follow_trajectory(trajectory, t_vec)
+    rospy.sleep(0.5)
+    planar_arm_commander.go_home()
+    rospy.sleep(0.5)
+
+    """ Polygon trajectory generation """
+    p_0 = [0.25, 0.25]    # Initial Cartesinan point
+    edges = 3             # Polygon edges count
+    radius = 0.15         # Polygon radius
+    angle = 0.25 * np.pi  # Fixed end-effector angle
+    t_vec, trajectory = polygon_trajectory(p_0, edges, radius, angle, t_f=2)
+    print("Following a polygonal Cartesian trajectory...")
     planar_arm_commander.follow_trajectory(trajectory, t_vec)
     rospy.sleep(0.5)
     planar_arm_commander.go_home()
