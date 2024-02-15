@@ -41,7 +41,7 @@ def main():
     """ Square trajectory generation """
     p_0 = [0.25, 0.25]    # Initial Cartesinan point
     side = 0.15           # Square side length
-    angle = 0.25 * np.pi  # Fixed end-effector angle
+    angle = 0.33 * np.pi  # Fixed end-effector angle
     t_vec, trajectory = square_trajectory(p_0, side, angle, t_f=2)
     print("Following a square Cartesian trajectory...")
     planar_arm_commander.follow_trajectory(trajectory, t_vec)

@@ -19,6 +19,7 @@ function draw() {
   background(0);
   for (i = 0; i < boids.length; i++){
     boids[i].angle = PI * noise(i, t);
+    boids[i].steer(boids);
     boids[i].update();
     boids[i].show();
   }

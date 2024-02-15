@@ -8,6 +8,36 @@ class Boid {
     this.angle = angle;
   }
 
+  separation(others){
+    for (let b_i of others){
+      if (b_i != this){
+        print(b_i)
+      }
+    }
+  }
+
+  alignment(others){
+    for (let b_i of others){
+      if (b_i != this){
+        print(b_i)
+      }
+    }
+  }
+  
+  cohesion(others){
+    for (let b_i of others){
+      if (b_i != this){
+        print(b_i)
+      }
+    }
+  }
+
+  steer(others){
+    sep = this.separation(others)
+    ali = this.alignment(others)
+    coh = this.cohesion(others)
+  }
+
   update(){
     let dir = p5.Vector.rotate(this.dir, this.angle - 0.5*PI)
     dir = p5.Vector.mult(dir, this.vel)
