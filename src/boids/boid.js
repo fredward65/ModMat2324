@@ -1,47 +1,70 @@
 class Boid {
-  constructor(x, y, angle=0, color = 255){
+  constructor(x, y, color = 255){
     this.pos = createVector(x, y);
-    this.dir = createVector(0, 1);
-    this.vel = 5;
+    this.vel = 10;
+    this.dir = p5.Vector.random2D().mult(this.vel);
     this.size = 50;
     this.color = color;
-    this.angle = angle;
+    this.view_r = 100;
   }
 
   separation(others){
+    let vec = createVector(0, 0);
+    let count = 0;
     for (let b_i of others){
-      if (b_i != this){
-        print(b_i)
+      let dist = p5.Vector.dist(this.pos, b_i.pos);
+      if (b_i != this && dist < this.view_r){
+        let far = p5.Vector.sub(this.pos, b_i.pos).div(dist); 
+        vec.add(far);
+        count++;
       }
     }
+    vec.div(count).setMag(this.vel);
+    return vec;
   }
 
   alignment(others){
+    let mean = createVector(0, 0);
+    let count = 0;
     for (let b_i of others){
-      if (b_i != this){
-        print(b_i)
+      let dist = p5.Vector.dist(this.pos, b_i.pos);
+      if (b_i != this && dist < this.view_r){
+        mean.add(b_i.dir);
+        count++;
       }
     }
+    mean.div(count).setMag(this.vel);
+    return mean;
   }
   
   cohesion(others){
+    let mean = createVector(0, 0);
+    let count = 0;
     for (let b_i of others){
-      if (b_i != this){
-        print(b_i)
+      let dist = p5.Vector.dist(this.pos, b_i.pos);
+      if (b_i != this && dist < this.view_r){
+        mean.add(b_i.pos);
+        count++;
       }
     }
+    mean.div(count).sub(this.pos).setMag(this.vel);
+    return mean;
   }
 
   steer(others){
-    sep = this.separation(others)
-    ali = this.alignment(others)
-    coh = this.cohesion(others)
+    let sep = this.separation(others);
+    let ali = this.alignment(others);
+    let coh = this.cohesion(others);
+    let total = createVector(0, 0);
+    total.add(sep.mult(1));
+    total.add(ali.mult(1));
+    total.add(coh.mult(1));
+    this.dir.add(total.limit(10));
+    this.dir.limit(this.vel);
   }
 
   update(){
-    let dir = p5.Vector.rotate(this.dir, this.angle - 0.5*PI)
-    dir = p5.Vector.mult(dir, this.vel)
-    this.pos.add(dir);
+    this.pos.add(this.dir);
     if(this.pos.x < 0) this.pos.x = width;
     if(this.pos.y < 0) this.pos.y = height;
     if(this.pos.x > width) this.pos.x = 0;
@@ -51,12 +74,13 @@ class Boid {
   show(){
     let a = floor(this.size / 2);
     let b = floor(a / 2);
+    let angle = this.dir.heading();
     noStroke();
     fill(this.color);
     push();
     translate(this.pos.x, this.pos.y);
-    rotate(this.angle - 0.5*PI)
-    triangle(-b, -a, 0, a, b, -a);
+    rotate(angle - 0.5*PI)
+    triangle(-b, -a, 0, a/2, b, -a);
     pop();
   }
 }
