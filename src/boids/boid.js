@@ -9,7 +9,7 @@ class Boid {
   }
 
   update(){
-    let dir = p5.Vector.rotate(this.dir, -this.angle - 0.5*PI)
+    let dir = p5.Vector.rotate(this.dir, this.angle - 0.5*PI)
     dir = p5.Vector.mult(dir, this.vel)
     this.pos.add(dir);
     if(this.pos.x < 0) this.pos.x = width;
@@ -25,7 +25,7 @@ class Boid {
     fill(this.color);
     push();
     translate(this.pos.x, this.pos.y);
-    rotate(-this.angle - 0.5*PI)
+    rotate(this.angle - 0.5*PI)
     triangle(-b, -a, 0, a, b, -a);
     pop();
   }
