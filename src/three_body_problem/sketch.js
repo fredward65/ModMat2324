@@ -9,12 +9,20 @@ function setup() {
   frameRate(60);
   dt = 1/60;
 
-  bodies[0] = new Body(200, createVector(width/2, height/2), createVector(0, 0));
-  
+  for (let i = 0; i < 5; i++){
+    bodies[i] = new Body(random(100, 200),
+                         createVector(random(width), random(height)),
+                         p5.Vector.random2D().setMag(random(-100, 100)));
+  }
   background(0);
 }
 
 function draw() {
   background(0, 10);
-  bodies[0].show();
+  for (let i = 0; i < bodies.length; i++){
+    for (let j = 0; j < bodies.length; j++){
+      if (i != j) bodies[i].attract(bodies[j]);
+    }
+    bodies[i].show();
+  }
 }
