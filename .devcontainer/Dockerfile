@@ -35,7 +35,7 @@ RUN sudo apt update && sudo apt upgrade -y \
 
 # Install Python dependencies
 RUN sudo apt update \
-    && sudo apt install pip -y \
+    && sudo apt install pip python3-tk texlive-latex-extra texlive-fonts-recommended dvipng cm-super -y \
     && pip install sympy dill
 
 # Create ROS workspace
