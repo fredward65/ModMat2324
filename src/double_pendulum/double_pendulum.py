@@ -20,13 +20,8 @@ def compute_dot_omega(th_1, th_2, om_1, om_2):
     myPhysicsLab Double Pendulum
     https://www.myphysicslab.com/pendulum/double-pendulum-en.html
     """
-    den = 1
-    
-    num_1 = 0
-    num_2 = 0
-    
-    dw_1 = num_1 / den
-    dw_2 = num_2 / den
+    dw_1 = 0
+    dw_2 = 0
 
     return dw_1, dw_2
 
