@@ -20,8 +20,15 @@ def compute_dot_omega(th_1, th_2, om_1, om_2):
     myPhysicsLab Double Pendulum
     https://www.myphysicslab.com/pendulum/double-pendulum-en.html
     """
-    dw_1 = 0
-    dw_2 = 0
+    delta_th = th_1 - th_2
+    den = (2*m_1 + m_2 - m_2*np.cos(2*delta_th))
+
+    num_1 = -g*(2*m_1 + m_2)*np.sin(th_1) - g*m_2*np.sin(th_1 - 2*th_2) - 2*np.sin(delta_th)*m_2*(om_2**2 * l_2 + om_1**2 * l_1 * np.cos(delta_th))
+
+    num_2 = 2*np.sin(delta_th)*(om_1**2 * l_1 * (m_1 + m_2) + g*(m_1 + m_2)*np.cos(th_1) + om_2**2 * l_2 * m_2 * np.cos(delta_th))
+
+    dw_1 = num_1 / (l_1*den)
+    dw_2 = num_2 / (l_2*den)
 
     return dw_1, dw_2
 
@@ -42,6 +49,7 @@ def main():
     th_2_t = []
     plt.xlim(-.5, .5)
     plt.ylim(-.5, .5)
+    plt.gca().set_aspect(1)
 
     x_1 = lambda th_1: l_1 * np.sin(th_1)
     y_1 = lambda th_1: l_1 * np.cos(th_1) * -1

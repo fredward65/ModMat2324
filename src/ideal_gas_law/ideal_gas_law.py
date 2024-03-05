@@ -21,11 +21,12 @@ def main():
     # Temperature range (K)
     T = np.linspace(0, 273.15 + 200, num=10)
     # Volume range (L)
-    V = np.linspace(0, 1, num=100)
+    V = np.linspace(5e-2, 1, num=100)
 
     # Plot Isotherms - P V = n R T
-    P = V
-    plt.plot(V, P, label=r'$T = %5.2f K$' % T[5], color=cmap(T[5] / T[-1]))
+    for T_i in T:
+        P = n * R * T_i * (1/V)
+        plt.plot(V, P, label=r'$T = %5.2f K$' % T_i, color=cmap(T_i / T[-1]))
     plt.legend()
     plt.xlabel(r'$V$ (L)')
     plt.ylabel(r'$P$ (kPa)')
@@ -33,7 +34,9 @@ def main():
     plt.tight_layout()
 
     # Pressure (kPa) from np.meshgrid(X, Y)
-    T_, V_, P_ = axes3d.get_test_data(.25)
+    # T_, V_, P_ = axes3d.get_test_data(.25)
+    T_, V_ = np.meshgrid(T, V)
+    P_ = n * R * T * (1/V_)
     
     ax = plt.figure().add_subplot(projection='3d')
     ax.grid(False)
